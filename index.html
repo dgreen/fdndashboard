@@ -1,0 +1,345 @@
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Financial Dashboard">
+    <meta name="keywords" content="dashboard, guage, information">
+    <meta name="author" content="David Green">
+
+    <title>
+        IEEE Foundation Dashboard 
+    </title>
+
+    <link href="http://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic" rel="stylesheet">
+    
+    <link href="assets/css/toolkit-light.css" rel="stylesheet">
+    
+    
+    <link href="assets/css/application.css" rel="stylesheet">
+
+    <style>
+      /* note: this is a hack for ios iframe for bootstrap themes shopify page */
+      /* this chunk of css is not part of the toolkit :) */
+      body {
+        width: 1px;
+        min-width: 100%;
+        *width: 100%;
+      }
+    </style>
+
+    <style>
+      h5 {
+        color: darkblue;
+        text-align: left;
+        font-weight: bold;
+        font-size: 18pt;
+        margin-bottom: 10px;
+      }
+
+      .notes {
+        margin-bottom: 40px;
+      }
+
+      .dbPane {
+         width:400px;
+         height:400px;
+      }
+
+      #notes {
+        height: 180px;
+        font-family: Arial, Helvetica, sans-serif;  
+        font-size: 24px;
+        color: darkblue; 
+      }
+
+      .dashhead-title {
+        color: darkblue;
+        font-size: 300%;
+        font-weight: bold;
+      }
+
+      .icon-gauge {
+        .position: absolute;
+        .top: -15px;
+      }
+
+      #cal1 {
+        .font-size: 18pt;
+      }
+
+    </style>
+
+  </head>
+
+
+<body>
+  
+
+<div class="without-iconav">
+
+  <div class="container-fluid">
+    <div class="dashhead">
+      <div class="dashhead-titles">
+        <h3 class="dashhead-title">IEEE Foundation Financial Dashboard</h3>
+      </div>
+
+      <div class="dashhead-toolbar">
+        <div class="input-with-icon dashhead-toolbar-item">
+          <input id=cal1 type="text" value="03/31/19" class="form-control" data-provide="datepicker">
+          <span class="icon icon-calendar"></span>
+        </div>
+      </div>
+    </div>
+
+    <hr class="my-4">
+
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane active" id="traffic">
+        <div class="row text-center m-t-md">
+
+          <div class="col-md-3 mb-5">
+            <h5><span class="icon icon-heart"> Cash and Pledge Contributions</span></h5>           
+            <div class="w-3">
+              <canvas id='capc' class='dbPane' data-toggle='modal' data-target='#infoModal' data-whatever='capc'></canvas>
+            </div>
+          </div>
+
+          <div class="col-md-3 mb-5">
+            <h5><span class="icon icon-export"> Program Support vs Budget</span></h5>
+            <div class="w-3">
+              <canvas id='psvb' class='dbPane' data-toggle='modal' data-target='#infoModal' data-whatever='psvb'></canvas>
+            </div>
+          </div>
+
+          <div class="col-md-3 mb-5">
+            <h5><span class="icon icon-cog"> Admin &amp; Fund Raising vs Budget</span></h5>
+            <div class="w-3">
+              <canvas id='afrvb' class='dbPane' data-toggle='modal' data-target='#infoModal' data-whatever='afrvb'></canvas>
+            </div>
+          </div>
+
+          <div class="col-md-3 mb-5">
+            <h5><span class="icon icon-hour-glass"> Days Expended</span></h5>
+            <div class="w-3">
+              <canvas id='de' class='dbPane' data-toggle='modal' data-target='#infoModal' data-whatever='de'></canvas>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <hr class="my-4">
+
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane active" id="traffic">
+        <div class="row text-center m-t-md">
+          <hr class="mt-0 mb-5">
+          <div class="col-md-3 mb-5">
+            <h5><span class="icon icon-credit"> Net Investment Income</span></h5>
+            <div class="w-3">
+              <canvas id='nii' class='dbPane' data-toggle='modal' data-target='#infoModal' data-whatever='nii'></canvas>
+            </div>
+          </div>
+          <div class="col-md-3 mb-5">
+            <h5><span class="icon icon-gauge"> Program to Expense Ratio</span></h5>
+            <div class="w-3">
+              <canvas id='pter' class='dbPane' data-toggle='modal' data-target='#infoModal' data-whatever='pter'></canvas>
+            </div>
+          </div>
+          <div class="col-md-6 mb-5">
+            <div>
+              <h5 class=notes><span class="icon icon-note"> Notes</span></h5>
+              <div class="input-group">
+                <textarea id=notes class="form-control" aria-label="With textarea">No issues to highlight at this point</textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <hr class="my-4">
+
+  </div>
+
+  <div id="infoModal" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Change Gauge</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p>Value: <input text id='infoValue'></p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" id="infoSave" class="btn btn-primary">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/js/tether.min.js"></script>
+    <script src="assets/js/chart.bundle.min.js"></script>
+    <script src="assets/js/tablesorter.min.js"></script>
+    <script src="assets/js/toolkit.js"></script>
+    <script src="assets/js/application.js"></script>
+    <script src="assets/js/Gauge.js"></script>
+    <script>
+      // execute/clear BS loaders for docs
+      $(function(){while(window.BS&&window.BS.loader&&window.BS.loader.length){(window.BS.loader.pop())()}})
+    </script>
+
+    <script>
+
+    function baseChartData() {
+      var data = {
+        datasets: [{
+          label: 'Net Investment Income',
+          gaugeLimits: [0, 66.66666, 100],
+          backgroundColor: [
+              `darkorange`,
+              `darkblue`
+          ],
+          gaugeData: {
+            value: 1500,
+            valueColor: "#ff7143"
+          },
+          borderWidth: 0
+        }]
+      };
+      return data;
+    }
+
+    function baseChartOptions() {
+      var options = {        
+        cutoutPercentage: 90,
+        tooltips: {
+          enabled: false
+        }
+      }
+      return options;
+    }
+
+    function drawGauge(name, data, options) {
+      var ctx = document.getElementById(name);
+      gauge = new Chart(ctx, {
+        type: 'tsgauge',
+        data: data,
+        options: options
+      })
+      return gauge
+    }
+
+    function capc() {
+      var data = baseChartData();
+      data.datasets[0].gaugeLimits = [0, 3941, 3941*1.5]
+      data.datasets[0].gaugeData.value = 1500
+  
+      var options = baseChartOptions();
+      return drawGauge('capc', data, options)
+    }
+
+    function psvb() {
+      var data = baseChartData();
+      data.datasets[0].gaugeLimits = [0, 6000, 6000*1.5]
+      data.datasets[0].gaugeData.value = 5013
+  
+      var options = baseChartOptions();
+      return drawGauge('psvb', data, options)
+    }
+
+    function afrvb() {
+      var data = baseChartData();
+      data.datasets[0].gaugeLimits = [0, 2607, 2607*1.5]
+      data.datasets[0].gaugeData.value = 700
+  
+      var options = baseChartOptions();
+      return drawGauge('afrvb', data, options)
+    }
+
+    function de() {
+      var data = baseChartData();
+      data.datasets[0].gaugeLimits = [0, 365, 365*1.5]
+      data.datasets[0].gaugeData.value = 90
+  
+      var options = baseChartOptions();
+      return drawGauge('de', data, options)
+    }
+
+    function nii() {
+      var data = baseChartData();
+      data.datasets[0].gaugeLimits = [-2222, 0, 5000, 7222]
+      data.datasets[0].backgroundColor = ['red', 'darkorange', 'darkblue']
+      data.datasets[0].gaugeData.value = 700
+  
+      var options = baseChartOptions();
+
+      return drawGauge('nii', data, options)
+    }
+
+    function pter() {
+      var data = baseChartData();
+      data.datasets[0].gaugeLimits = [0, 75, 100]
+      data.datasets[0].backgroundColor = ['red', 'green']
+      data.datasets[0].gaugeData.value = 84
+  
+      var options = baseChartOptions();
+      return drawGauge('pter', data, options)
+    }
+
+    // draw the gauges
+    Chart.defaults.tsgauge.animation.animateRotate = false;
+    capcGauge  = capc();
+    psvbGauge  = psvb();
+    afrvbGauge = afrvb();
+    deGauge    = de();
+    niiGauge   = nii();
+    pterGauge  = pter();
+
+    var canvasToGauge = {}
+    canvasToGauge['capc']  = capcGauge;
+    canvasToGauge['psvb']  = psvbGauge;
+    canvasToGauge['afrvb'] = afrvbGauge;
+    canvasToGauge['de']    = deGauge;
+    canvasToGauge['nii']   = niiGauge;
+    canvasToGauge['pter']  = pterGauge;
+
+  $('#infoModal').on('show.bs.modal', function (event) {
+    var infoCanvas = $(event.relatedTarget)      // Chart that triggered the modal
+    var infoCanvasID = infoCanvas.data('whatever') // Extract info from data-* attributes
+    theGauge = canvasToGauge[infoCanvasID]
+    $('#infoValue').val(theGauge.config.data.datasets[0].gaugeData.value.toString(10))
+    $('#infoSave').click(function() {
+      theGauge.config.data.datasets[0].gaugeData.value = parseFloat($('#infoValue').val()); 
+      theGauge.update({duration:0,lazy: true})
+      $('#infoModal').modal('hide')     
+    })
+  })
+
+
+
+    // $('#capc').click( function(source) {
+    //   var guage = source
+    //   alert( guage )
+    //   $('#infoValue').val('200')
+    //   $('#infoModal').modal('show'); 
+    // });
+
+    </script>
+
+
+  </body>
+</html>
+
