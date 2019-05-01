@@ -90,7 +90,7 @@
 
       <div class="dashhead-toolbar">
         <div class="input-with-icon dashhead-toolbar-item">
-          <input id=cal1 type="text" value="03/31/19" class="form-control" data-provide="datepicker">
+          <input id='cal1' type="text" value="04/01/2019" class="form-control" data-provide="datepicker">
           <span class="icon icon-calendar"></span>
         </div>
       </div>
@@ -103,28 +103,28 @@
         <div class="row text-center m-t-md">
 
           <div class="col-md-3 mb-5">
-            <h5><span class="icon icon-heart"> Cash and Pledge Contributions</span></h5>           
+            <h5 id='capc-title'><span class="icon icon-heart"> Cash and Pledge Contributions</span></h5>           
             <div class="w-3">
               <canvas id='capc' class='dbPane' data-toggle='modal' data-target='#infoModal' data-whatever='capc'></canvas>
             </div>
           </div>
 
           <div class="col-md-3 mb-5">
-            <h5><span class="icon icon-export"> Program Support vs Budget</span></h5>
+            <h5 id='psvb-title'><span class="icon icon-export"> Program Support vs Budget</span></h5>
             <div class="w-3">
               <canvas id='psvb' class='dbPane' data-toggle='modal' data-target='#infoModal' data-whatever='psvb'></canvas>
             </div>
           </div>
 
           <div class="col-md-3 mb-5">
-            <h5><span class="icon icon-cog"> Admin &amp; Fund Raising vs Budget</span></h5>
+            <h5 id='afrvb-title'><span class="icon icon-cog"> Admin &amp; Fund Raising vs Budget</span></h5>
             <div class="w-3">
               <canvas id='afrvb' class='dbPane' data-toggle='modal' data-target='#infoModal' data-whatever='afrvb'></canvas>
             </div>
           </div>
 
           <div class="col-md-3 mb-5">
-            <h5><span class="icon icon-hour-glass"> Days Expended</span></h5>
+            <h5 'de-title'><span class="icon icon-hour-glass"> Days Expended</span></h5>
             <div class="w-3">
               <canvas id='de' class='dbPane' data-toggle='modal' data-target='#infoModal' data-whatever='de'></canvas>
             </div>
@@ -141,13 +141,13 @@
         <div class="row text-center m-t-md">
           <hr class="mt-0 mb-5">
           <div class="col-md-3 mb-5">
-            <h5><span class="icon icon-credit"> Net Investment Income</span></h5>
+            <h5 id='nii-title'><span class="icon icon-credit"> Net Investment Income</span></h5>
             <div class="w-3">
               <canvas id='nii' class='dbPane' data-toggle='modal' data-target='#infoModal' data-whatever='nii'></canvas>
             </div>
           </div>
           <div class="col-md-3 mb-5">
-            <h5><span class="icon icon-gauge"> Program to Expense Ratio</span></h5>
+            <h5 id='pter-title'><span class="icon icon-gauge"> Program to Expense Ratio</span></h5>
             <div class="w-3">
               <canvas id='pter' class='dbPane' data-toggle='modal' data-target='#infoModal' data-whatever='pter'></canvas>
             </div>
@@ -172,7 +172,7 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">Change Gauge</h5>
+          <h5 class="modal-title">Change Value on <span id=topicInfo>Generic</span> Gauge</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -196,13 +196,42 @@
     <script src="assets/js/toolkit.js"></script>
     <script src="assets/js/application.js"></script>
     <script src="assets/js/Gauge.js"></script>
+    <script src="initData.js"></script>
     <script>
       // execute/clear BS loaders for docs
       $(function(){while(window.BS&&window.BS.loader&&window.BS.loader.length){(window.BS.loader.pop())()}})
     </script>
 
     <script>
+    // activities related to initialization after initData.js loads
+    function days_of_a_year(year) 
+    {   
+      return isLeapYear(year) ? 366 : 365;
+    }
 
+    function isLeapYear(year) {
+      return year % 400 === 0 || (year % 100 !== 0 && year % 4 === 0);
+    }
+
+    function computeMax(value) {
+      return Math.round(value * 1.5)
+    }
+    var deBudget      = days_of_a_year(new Date(deDate).getFullYear())
+    var deValue       = 90 // will be overridden
+
+    var pterBudget    = 75
+
+    var capcMax       = computeMax(capcBudget)
+    var psvbMax       = computeMax(psvbBudget)
+    var afrvbMax      = computeMax(afrvbBudget)
+    var deMax         = computeMax(deBudget)
+    var niiMax        = Math.round(niiBudget * (20./6.))    // 20% gain
+    var niiMin        = Math.round(-niiBudget * (10./6.))   // 10% loss
+    var pterMax       = 100
+    </script>
+
+
+    <script>
     function baseChartData() {
       var data = {
         datasets: [{
@@ -244,8 +273,8 @@
 
     function capc() {
       var data = baseChartData();
-      data.datasets[0].gaugeLimits = [0, 3941, 3941*1.5]
-      data.datasets[0].gaugeData.value = 1500
+      data.datasets[0].gaugeLimits = [0, capcBudget, capcMax]
+      data.datasets[0].gaugeData.value = capcValue
   
       var options = baseChartOptions();
       return drawGauge('capc', data, options)
@@ -253,8 +282,8 @@
 
     function psvb() {
       var data = baseChartData();
-      data.datasets[0].gaugeLimits = [0, 6000, 6000*1.5]
-      data.datasets[0].gaugeData.value = 5013
+      data.datasets[0].gaugeLimits = [0, psvbBudget, psvbMax]
+      data.datasets[0].gaugeData.value = psvbValue
   
       var options = baseChartOptions();
       return drawGauge('psvb', data, options)
@@ -262,8 +291,8 @@
 
     function afrvb() {
       var data = baseChartData();
-      data.datasets[0].gaugeLimits = [0, 2607, 2607*1.5]
-      data.datasets[0].gaugeData.value = 700
+      data.datasets[0].gaugeLimits = [0, afrvbBudget, afrvbMax]
+      data.datasets[0].gaugeData.value = afrvbValue
   
       var options = baseChartOptions();
       return drawGauge('afrvb', data, options)
@@ -271,8 +300,8 @@
 
     function de() {
       var data = baseChartData();
-      data.datasets[0].gaugeLimits = [0, 365, 365*1.5]
-      data.datasets[0].gaugeData.value = 90
+      data.datasets[0].gaugeLimits = [0, deBudget, deMax]
+      data.datasets[0].gaugeData.value = deValue
   
       var options = baseChartOptions();
       return drawGauge('de', data, options)
@@ -280,9 +309,9 @@
 
     function nii() {
       var data = baseChartData();
-      data.datasets[0].gaugeLimits = [-2222, 0, 5000, 7222]
+      data.datasets[0].gaugeLimits = [niiMin, 0, niiBudget, niiMax]
       data.datasets[0].backgroundColor = ['red', 'darkorange', 'darkblue']
-      data.datasets[0].gaugeData.value = 700
+      data.datasets[0].gaugeData.value = niiValue
   
       var options = baseChartOptions();
 
@@ -291,9 +320,9 @@
 
     function pter() {
       var data = baseChartData();
-      data.datasets[0].gaugeLimits = [0, 75, 100]
+      data.datasets[0].gaugeLimits = [0, pterBudget, pterMax]
       data.datasets[0].backgroundColor = ['red', 'green']
-      data.datasets[0].gaugeData.value = 84
+      data.datasets[0].gaugeData.value = pterValue
   
       var options = baseChartOptions();
       return drawGauge('pter', data, options)
@@ -316,26 +345,40 @@
     canvasToGauge['nii']   = niiGauge;
     canvasToGauge['pter']  = pterGauge;
 
-  $('#infoModal').on('show.bs.modal', function (event) {
-    var infoCanvas = $(event.relatedTarget)      // Chart that triggered the modal
-    var infoCanvasID = infoCanvas.data('whatever') // Extract info from data-* attributes
-    theGauge = canvasToGauge[infoCanvasID]
-    $('#infoValue').val(theGauge.config.data.datasets[0].gaugeData.value.toString(10))
-    $('#infoSave').click(function() {
-      theGauge.config.data.datasets[0].gaugeData.value = parseFloat($('#infoValue').val()); 
-      theGauge.update({duration:0,lazy: true})
-      $('#infoModal').modal('hide')     
+    $('#infoModal').on('show.bs.modal', function (event) {
+      var infoCanvas = $(event.relatedTarget)      // Chart that triggered the modal
+      var infoCanvasID = infoCanvas.data('whatever') // Extract info from data-* attributes
+      theGauge = canvasToGauge[infoCanvasID]
+      titleInfoID = '#' + infoCanvasID + "-title"
+      $('#infoValue').val(theGauge.config.data.datasets[0].gaugeData.value.toString(10))
+      $('#topicInfo').text($(titleInfoID).text())
+      $('#infoSave').click(function() {
+        theGauge.config.data.datasets[0].gaugeData.value = parseFloat($('#infoValue').val()); 
+        theGauge.update({duration:0,lazy: true})
+        $('#infoModal').modal('hide')     
+      })
     })
-  })
+
+    function daysIntoYear(dateString) {
+      dateObject     = new Date(dateString)
+      // note:  +1 at end of equation is due to using the start of each day so .ceil does not help
+      var theDay = Math.ceil((dateObject - new Date(dateObject.getFullYear(),0,1)) / 86400000) + 1;
+      return theDay;
+    }
 
 
+    // deGauge.config.data.datasets[0].gaugeData.value = daysIntoYear(deDate)
 
-    // $('#capc').click( function(source) {
-    //   var guage = source
-    //   alert( guage )
-    //   $('#infoValue').val('200')
-    //   $('#infoModal').modal('show'); 
-    // });
+
+    $('#cal1').on( 'change', function(event) {
+      var dateString = $('#cal1').val()
+      deGauge.config.data.datasets[0].gaugeData.value = daysIntoYear(dateString)
+      deGauge.update({duration:0,lazy: true})
+    });
+
+    // set initial date from file
+    $('#cal1').val(deDate)
+
 
     </script>
 
