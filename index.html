@@ -63,21 +63,12 @@
         font-weight: bold;
       }
 
-      .icon-gauge {
-        .position: absolute;
-        .top: -15px;
-      }
-
-      #cal1 {
-        .font-size: 18pt;
-      }
-
     </style>
 
   </head>
 
 
-<body>
+  <body>
   
 
 <div class="without-iconav">
@@ -99,7 +90,7 @@
     <hr class="my-4">
 
     <div class="tab-content">
-      <div role="tabpanel" class="tab-pane active" id="traffic">
+      <div role="tabpanel" class="tab-pane active" id="traffic1">
         <div class="row text-center m-t-md">
 
           <div class="col-md-3 mb-5">
@@ -124,7 +115,7 @@
           </div>
 
           <div class="col-md-3 mb-5">
-            <h5 'de-title'><span class="icon icon-hour-glass"> Days Expended</span></h5>
+            <h5 id='de-title'><span class="icon icon-hour-glass"> Days Expended</span></h5>
             <div class="w-3">
               <canvas id='de' class='dbPane' data-toggle='modal' data-target='#infoModal' data-whatever='de'></canvas>
             </div>
@@ -137,7 +128,7 @@
     <hr class="my-4">
 
     <div class="tab-content">
-      <div role="tabpanel" class="tab-pane active" id="traffic">
+      <div role="tabpanel" class="tab-pane active" id="traffic2">
         <div class="row text-center m-t-md">
           <hr class="mt-0 mb-5">
           <div class="col-md-3 mb-5">
@@ -178,7 +169,7 @@
           </button>
         </div>
         <div class="modal-body">
-          <p>Value: <input text id='infoValue'></p>
+          <p>Value: <input type='text' id='infoValue'></p>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -214,20 +205,20 @@
     }
 
     function computeMax(value) {
-      return Math.round(value * 1.5)
+      return Math.round(value * 1.5);
     }
-    var deBudget      = days_of_a_year(new Date(deDate).getFullYear())
-    var deValue       = 90 // will be overridden
+    var deBudget      = days_of_a_year(new Date(deDate).getFullYear());
+    var deValue       = 90; // will be overridden
 
-    var pterBudget    = 75
+    var pterBudget    = 75;
 
-    var capcMax       = computeMax(capcBudget)
-    var psvbMax       = computeMax(psvbBudget)
-    var afrvbMax      = computeMax(afrvbBudget)
-    var deMax         = computeMax(deBudget)
-    var niiMax        = Math.round(niiBudget * (20./6.))    // 20% gain
-    var niiMin        = Math.round(-niiBudget * (10./6.))   // 10% loss
-    var pterMax       = 100
+    var capcMax       = computeMax(capcBudget);
+    var psvbMax       = computeMax(psvbBudget);
+    var afrvbMax      = computeMax(afrvbBudget);
+    var deMax         = computeMax(deBudget);
+    var niiMax        = Math.round(niiBudget * (20./6.));    // 20% gain
+    var niiMin        = Math.round(-niiBudget * (10./6.));   // 10% loss
+    var pterMax       = 100;
     </script>
 
 
@@ -257,7 +248,7 @@
         tooltips: {
           enabled: false
         }
-      }
+      };
       return options;
     }
 
@@ -267,65 +258,65 @@
         type: 'tsgauge',
         data: data,
         options: options
-      })
-      return gauge
+      });
+      return gauge;
     }
 
     function capc() {
       var data = baseChartData();
-      data.datasets[0].gaugeLimits = [0, capcBudget, capcMax]
-      data.datasets[0].gaugeData.value = capcValue
+      data.datasets[0].gaugeLimits = [0, capcBudget, capcMax];
+      data.datasets[0].gaugeData.value = capcValue;
   
       var options = baseChartOptions();
-      return drawGauge('capc', data, options)
+      return drawGauge('capc', data, options);
     }
 
     function psvb() {
       var data = baseChartData();
-      data.datasets[0].gaugeLimits = [0, psvbBudget, psvbMax]
-      data.datasets[0].gaugeData.value = psvbValue
+      data.datasets[0].gaugeLimits = [0, psvbBudget, psvbMax];
+      data.datasets[0].gaugeData.value = psvbValue;
   
       var options = baseChartOptions();
-      return drawGauge('psvb', data, options)
+      return drawGauge('psvb', data, options);
     }
 
     function afrvb() {
       var data = baseChartData();
-      data.datasets[0].gaugeLimits = [0, afrvbBudget, afrvbMax]
-      data.datasets[0].gaugeData.value = afrvbValue
+      data.datasets[0].gaugeLimits = [0, afrvbBudget, afrvbMax];
+      data.datasets[0].gaugeData.value = afrvbValue;
   
       var options = baseChartOptions();
-      return drawGauge('afrvb', data, options)
+      return drawGauge('afrvb', data, options);
     }
 
     function de() {
       var data = baseChartData();
-      data.datasets[0].gaugeLimits = [0, deBudget, deMax]
-      data.datasets[0].gaugeData.value = deValue
+      data.datasets[0].gaugeLimits = [0, deBudget, deMax];
+      data.datasets[0].gaugeData.value = deValue;
   
       var options = baseChartOptions();
-      return drawGauge('de', data, options)
+      return drawGauge('de', data, options);
     }
 
     function nii() {
       var data = baseChartData();
-      data.datasets[0].gaugeLimits = [niiMin, 0, niiBudget, niiMax]
-      data.datasets[0].backgroundColor = ['red', 'darkorange', 'darkblue']
-      data.datasets[0].gaugeData.value = niiValue
+      data.datasets[0].gaugeLimits = [niiMin, 0, niiBudget, niiMax];
+      data.datasets[0].backgroundColor = ['red', 'darkorange', 'darkblue'];
+      data.datasets[0].gaugeData.value = niiValue;
   
       var options = baseChartOptions();
 
-      return drawGauge('nii', data, options)
+      return drawGauge('nii', data, options);
     }
 
     function pter() {
       var data = baseChartData();
-      data.datasets[0].gaugeLimits = [0, pterBudget, pterMax]
-      data.datasets[0].backgroundColor = ['red', 'green']
-      data.datasets[0].gaugeData.value = pterValue
+      data.datasets[0].gaugeLimits = [0, pterBudget, pterMax];
+      data.datasets[0].backgroundColor = ['red', 'green'];
+      data.datasets[0].gaugeData.value = pterValue;
   
       var options = baseChartOptions();
-      return drawGauge('pter', data, options)
+      return drawGauge('pter', data, options);
     }
 
     // draw the gauges
@@ -337,7 +328,7 @@
     niiGauge   = nii();
     pterGauge  = pter();
 
-    var canvasToGauge = {}
+    var canvasToGauge = {};
     canvasToGauge['capc']  = capcGauge;
     canvasToGauge['psvb']  = psvbGauge;
     canvasToGauge['afrvb'] = afrvbGauge;
@@ -346,21 +337,21 @@
     canvasToGauge['pter']  = pterGauge;
 
     $('#infoModal').on('show.bs.modal', function (event) {
-      var infoCanvas = $(event.relatedTarget)      // Chart that triggered the modal
-      var infoCanvasID = infoCanvas.data('whatever') // Extract info from data-* attributes
-      theGauge = canvasToGauge[infoCanvasID]
-      titleInfoID = '#' + infoCanvasID + "-title"
-      $('#infoValue').val(theGauge.config.data.datasets[0].gaugeData.value.toString(10))
-      $('#topicInfo').text($(titleInfoID).text())
+      var infoCanvas = $(event.relatedTarget);        // Chart that triggered the modal
+      var infoCanvasID = infoCanvas.data('whatever'); // Extract info from data-* attributes
+      theGauge = canvasToGauge[infoCanvasID];
+      titleInfoID = '#' + infoCanvasID + "-title";
+      $('#infoValue').val(theGauge.config.data.datasets[0].gaugeData.value.toString(10));
+      $('#topicInfo').text($(titleInfoID).text());
       $('#infoSave').click(function() {
         theGauge.config.data.datasets[0].gaugeData.value = parseFloat($('#infoValue').val()); 
-        theGauge.update({duration:0,lazy: true})
-        $('#infoModal').modal('hide')     
-      })
-    })
+        theGauge.update({duration:0,lazy: true});
+        $('#infoModal').modal('hide');     
+      });
+    });
 
     function daysIntoYear(dateString) {
-      dateObject     = new Date(dateString)
+      dateObject     = new Date(dateString);
       // note:  +1 at end of equation is due to using the start of each day so .ceil does not help
       var theDay = Math.ceil((dateObject - new Date(dateObject.getFullYear(),0,1)) / 86400000) + 1;
       return theDay;
@@ -371,13 +362,13 @@
 
 
     $('#cal1').on( 'change', function(event) {
-      var dateString = $('#cal1').val()
-      deGauge.config.data.datasets[0].gaugeData.value = daysIntoYear(dateString)
-      deGauge.update({duration:0,lazy: true})
+      var dateString = $('#cal1').val();
+      deGauge.config.data.datasets[0].gaugeData.value = daysIntoYear(dateString);
+      deGauge.update({duration:0,lazy: true});
     });
 
     // set initial date from file
-    $('#cal1').val(deDate)
+    $('#cal1').val(deDate);
 
 
     </script>
