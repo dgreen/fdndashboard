@@ -63,6 +63,14 @@
         font-weight: bold;
       }
 
+      .niinotes {
+        font-family: Arial, Helvetica, sans-serif;
+        color: darkblue;
+        /** position: relative; */
+        text-align: left;
+        margin-left: 30px;
+      }
+
     </style>
 
   </head>
@@ -115,7 +123,7 @@
           </div>
 
           <div class="col-md-3 mb-5">
-            <h5 id='de-title'><span class="icon icon-hour-glass"> Days Expended</span></h5>
+            <h5 id='de-title'><span class="icon icon-hour-glass"> Days Expended<br><br></span></h5>
             <div class="w-3">
               <canvas id='de' class='dbPane' data-toggle='modal' data-target='#infoModal' data-whatever='de'></canvas>
             </div>
@@ -136,6 +144,10 @@
             <div class="w-3">
               <canvas id='nii' class='dbPane' data-toggle='modal' data-target='#infoModal' data-whatever='nii'></canvas>
             </div>
+            <p class="niinotes">
+              Subject to market variations.<br>
+              YTD <span id='niiPctYTD'>4.5</span>% with Budget of <span id='niiPctGoal'>6</span>%
+            </p>
           </div>
           <div class="col-md-3 mb-5">
             <h5 id='pter-title'><span class="icon icon-gauge"> Program to Expense Ratio</span></h5>
@@ -334,6 +346,8 @@
     canvasToGauge['afrvb'] = afrvbGauge;
     canvasToGauge['de']    = deGauge;
     canvasToGauge['nii']   = niiGauge;
+    $('#niiPctYTD').text(niiPercentYTD);
+    $('#niiPctGoal').text(niiPercentGoal);
     canvasToGauge['pter']  = pterGauge;
 
     $('#infoModal').on('show.bs.modal', function (event) {
