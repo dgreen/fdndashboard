@@ -102,6 +102,13 @@
         <div class="row text-center m-t-md">
 
           <div class="col-md-3 mb-5">
+            <h5 id='de-title'><span class="icon icon-hour-glass"> Days Expended</span></h5>
+            <div class="w-3">
+              <canvas id='de' class='dbPane' data-toggle='modal' data-target='#infoModal' data-whatever='de'></canvas>
+            </div>
+          </div>
+
+          <div class="col-md-3 mb-5">
             <h5 id='capc-title'><span class="icon icon-heart"> Cash and Pledge Contributions</span></h5>           
             <div class="w-3">
               <canvas id='capc' class='dbPane' data-toggle='modal' data-target='#infoModal' data-whatever='capc'></canvas>
@@ -119,13 +126,6 @@
             <h5 id='afrvb-title'><span class="icon icon-cog"> Admin &amp; Fund Raising vs Budget</span></h5>
             <div class="w-3">
               <canvas id='afrvb' class='dbPane' data-toggle='modal' data-target='#infoModal' data-whatever='afrvb'></canvas>
-            </div>
-          </div>
-
-          <div class="col-md-3 mb-5">
-            <h5 id='de-title'><span class="icon icon-hour-glass"> Days Expended<br><br></span></h5>
-            <div class="w-3">
-              <canvas id='de' class='dbPane' data-toggle='modal' data-target='#infoModal' data-whatever='de'></canvas>
             </div>
           </div>
 
@@ -219,18 +219,20 @@
     function computeMax(value) {
       return Math.round(value * 1.5);
     }
-    var deBudget      = days_of_a_year(new Date(deDate).getFullYear());
-    var deValue       = 90; // will be overridden
 
-    var pterBudget    = 75;
+    var deBudget                = days_of_a_year(new Date(deDate).getFullYear());
+    var deValue                 = 90; // will be overridden
 
-    var capcMax       = computeMax(capcBudget);
-    var psvbMax       = computeMax(psvbBudget);
-    var afrvbMax      = computeMax(afrvbBudget);
-    var deMax         = computeMax(deBudget);
-    var niiMax        = Math.round(niiBudget * (20./6.));    // 20% gain
-    var niiMin        = Math.round(-niiBudget * (10./6.));   // 10% loss
-    var pterMax       = 100;
+    var pterCharityNavigator    = 75;
+    var pterMinTarget           = 78;
+
+    var capcMax                 = computeMax(capcBudget);
+    var psvbMax                 = computeMax(psvbBudget);
+    var afrvbMax                = computeMax(afrvbBudget);
+    var deMax                   = computeMax(deBudget);
+    var niiMax                  = Math.round(niiBudget * (20./6.));    // 20% gain
+    var niiMin                  = Math.round(-niiBudget * (10./6.));   // 10% loss
+    var pterMax                 = 100;
     </script>
 
 
@@ -274,6 +276,15 @@
       return gauge;
     }
 
+    function de() {
+      var data = baseChartData();
+      data.datasets[0].gaugeLimits = [0, deBudget, deMax];
+      data.datasets[0].gaugeData.value = deValue;
+  
+      var options = baseChartOptions();
+      return drawGauge('de', data, options);
+    }
+
     function capc() {
       var data = baseChartData();
       data.datasets[0].gaugeLimits = [0, capcBudget, capcMax];
@@ -301,19 +312,10 @@
       return drawGauge('afrvb', data, options);
     }
 
-    function de() {
-      var data = baseChartData();
-      data.datasets[0].gaugeLimits = [0, deBudget, deMax];
-      data.datasets[0].gaugeData.value = deValue;
-  
-      var options = baseChartOptions();
-      return drawGauge('de', data, options);
-    }
-
     function nii() {
       var data = baseChartData();
       data.datasets[0].gaugeLimits = [niiMin, 0, niiBudget, niiMax];
-      data.datasets[0].backgroundColor = ['red', 'darkorange', 'darkblue'];
+      data.datasets[0].backgroundColor = ['red', '#FFFF66', 'green'];
       data.datasets[0].gaugeData.value = niiValue;
   
       var options = baseChartOptions();
@@ -323,8 +325,8 @@
 
     function pter() {
       var data = baseChartData();
-      data.datasets[0].gaugeLimits = [0, pterBudget, pterMax];
-      data.datasets[0].backgroundColor = ['red', 'green'];
+      data.datasets[0].gaugeLimits = [0, pterCharityNavigator, pterMinTarget, pterMax];
+      data.datasets[0].backgroundColor = ['red', '#FFFF66', 'green'];
       data.datasets[0].gaugeData.value = pterValue;
   
       var options = baseChartOptions();
@@ -332,19 +334,19 @@
     }
 
     // draw the gauges
-    Chart.defaults.tsgauge.animation.animateRotate = false;
+    Chart.defaults.tsgauge.animation.animateRotate = false;  // Bug: does not impact display
+    deGauge    = de();
     capcGauge  = capc();
     psvbGauge  = psvb();
     afrvbGauge = afrvb();
-    deGauge    = de();
     niiGauge   = nii();
     pterGauge  = pter();
 
     var canvasToGauge = {};
+    canvasToGauge['de']    = deGauge;
     canvasToGauge['capc']  = capcGauge;
     canvasToGauge['psvb']  = psvbGauge;
     canvasToGauge['afrvb'] = afrvbGauge;
-    canvasToGauge['de']    = deGauge;
     canvasToGauge['nii']   = niiGauge;
     $('#niiPctYTD').text(niiPercentYTD);
     $('#niiPctGoal').text(niiPercentGoal);
