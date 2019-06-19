@@ -18,8 +18,6 @@
     <link href="http://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic" rel="stylesheet">
     
     <link href="assets/css/toolkit-light.css" rel="stylesheet">
-    
-    
     <link href="assets/css/application.css" rel="stylesheet">
 
     <style>
@@ -386,7 +384,9 @@
     // set initial date from file
     $('#cal1').val(deDate);
 
-
+    // change height of Days Expended text box to be same as Admin &amp; Fund Raising vs Budget box
+    // just visual clean up
+    $('#de-title').innerHeight($('#afrvb-title').innerHeight());
     </script>
 
 
