@@ -73,9 +73,7 @@
 
   </head>
 
-
   <body>
-  
 
 <div class="without-iconav">
 
@@ -240,6 +238,7 @@
         datasets: [{
           label: 'Net Investment Income',
           gaugeLimits: [0, 66.66666, 100],
+          limitVisibilty: [true, true, true, true, true, true, true],
           backgroundColor: [
               `darkorange`,
               `darkblue`
@@ -257,6 +256,7 @@
     function baseChartOptions() {
       var options = {        
         cutoutPercentage: 90,
+        animate: false,
         tooltips: {
           enabled: false
         }

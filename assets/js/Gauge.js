@@ -8,8 +8,18 @@
 		this.chart = chart;
 		this.ctx = chart.ctx;
 		this.limits = config.data.datasets[0].gaugeLimits;
+		if (typeof(config.data.datasets[0].limitVisibilty) === 'undefined') {
+			// make array 
+			this.makeVisible = [];
+			for (i = 0; i < this.limits.length; i++) {
+				this.makeVisible.push(true);
+			}		
+		} else {
+			this.makeVisible = config.data.datasets[0].limitVisibilty;
+		}
 		this.data = config.data.datasets[0].gaugeData;
 		var options = chart.options;
+		this.animate = (typeof(options.animate) === 'undefined') ? true : options.animate;
 		this.fontSize = options.defaultFontSize;
 		this.fontStyle = options.defaultFontFamily;
 		this.fontColor = options.defaultFontColor;
@@ -108,7 +118,9 @@
 	};
 	GaugeChartHelper.prototype.renderLimits = function() {
 		for (var i = 0, ln = this.limits.length; i < ln; i++) {
-			this.renderLimitLabel(this.limits[i]);
+			if (this.makeVisible[i]) {
+				this.renderLimitLabel(this.limits[i]);
+			}
 		}
 	};
 	GaugeChartHelper.prototype.renderValueLabel = function() {
@@ -199,7 +211,7 @@
 			gaugeHelper.applyGaugeConfig(chart.config);
 			chart.config.options.animation.onComplete = function(chartElement) {
 				gaugeHelper.updateGaugeDimensions();
-				gaugeHelper.animateArrow();
+				if (gaugeHelper.animate) gaugeHelper.animateArrow();
 			};
 			Chart.controllers.doughnut.prototype.initialize.apply(this, arguments);
 		},
@@ -211,7 +223,12 @@
 			if (gaugeHelper.showMarkers) {
 				gaugeHelper.renderLimits();
 			}
-			gaugeHelper.renderSmallValueArrow(gaugeHelper.minValue);
+			console.log(gaugeHelper.animate)
+			if (gaugeHelper.animate) {
+				gaugeHelper.renderSmallValueArrow(gaugeHelper.minValue);
+			} else {
+				gaugeHelper.renderValueArrow();
+			}
 		}
 	});
 })();
