@@ -1,6 +1,3 @@
-
-
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -100,7 +97,7 @@
           <div class="col-md-3 mb-5">
             <h5 id='de-title'><span class="icon icon-hour-glass"> Days Expended</span></h5>
             <div class="w-3">
-              <canvas id='de' class='dbPane' data-toggle='modal' data-target='#infoModal' data-whatever='de'></canvas>
+              <canvas id='de' class='dbPane'></canvas>
             </div>
           </div>
 
@@ -216,16 +213,18 @@
       return Math.round(value * 1.5);
     }
 
+    function computePosition(value, toBudget) {
+      return value / toBudget;
+    }
+
     var deBudget                = days_of_a_year(new Date(deDate).getFullYear());
     var deValue                 = 90; // will be overridden
+
+    var position                = computePosition(deValue, deBudget);
 
     var pterCharityNavigator    = 75;
     var pterMinTarget           = 78;
 
-    var capcMax                 = computeMax(capcBudget);
-    var psvbMax                 = computeMax(psvbBudget);
-    var afrvbMax                = computeMax(afrvbBudget);
-    var deMax                   = computeMax(deBudget);
     var niiMax                  = Math.round(niiBudget * (20./6.));    // 20% gain
     var niiMin                  = Math.round(-niiBudget * (10./6.));   // 10% loss
     var pterMax                 = 100;
@@ -274,40 +273,46 @@
       return gauge;
     }
 
-    function de() {
+    // name of gauge, planned value at end of year
+    function drawCommonAngleGauge(name, plan, value) {
       var data = baseChartData();
-      data.datasets[0].gaugeLimits = [0, deBudget, deMax];
-      data.datasets[0].gaugeData.value = deValue;
-  
+      let gaugeMax = computeMax(plan);
+      let barLow  = Math.round((position * plan) * .98);
+      let barHigh = Math.round((position * plan) * 1.02);
+      data.datasets[0].gaugeLimits = [0, barLow, barHigh, plan, gaugeMax];
+      data.datasets[0].gaugeData.value = value;
+      data.datasets[0].limitVisibilty = [ true, false, false, true, true];
+      data.datasets[0].backgroundColor = [
+              `darkorange`,
+              `black`,
+              `darkorange`,
+              `darkblue`
+          ];
+
       var options = baseChartOptions();
-      return drawGauge('de', data, options);
+      var ctx = document.getElementById(name);
+      gauge = new Chart(ctx, {
+        type: 'tsgauge',
+        data: data,
+        options: options
+      });
+      return gauge;
+    }
+
+    function de() {
+      return drawCommonAngleGauge('de', deBudget, deValue);
     }
 
     function capc() {
-      var data = baseChartData();
-      data.datasets[0].gaugeLimits = [0, capcBudget, capcMax];
-      data.datasets[0].gaugeData.value = capcValue;
-  
-      var options = baseChartOptions();
-      return drawGauge('capc', data, options);
+      return drawCommonAngleGauge('capc', capcBudget, capcValue);
     }
 
     function psvb() {
-      var data = baseChartData();
-      data.datasets[0].gaugeLimits = [0, psvbBudget, psvbMax];
-      data.datasets[0].gaugeData.value = psvbValue;
-  
-      var options = baseChartOptions();
-      return drawGauge('psvb', data, options);
+      return drawCommonAngleGauge('psvb', psvbBudget, psvbValue);
     }
 
     function afrvb() {
-      var data = baseChartData();
-      data.datasets[0].gaugeLimits = [0, afrvbBudget, afrvbMax];
-      data.datasets[0].gaugeData.value = afrvbValue;
-  
-      var options = baseChartOptions();
-      return drawGauge('afrvb', data, options);
+      return drawCommonAngleGauge('afrvb', afrvbBudget, afrvbValue);
     }
 
     function nii() {
@@ -377,8 +382,14 @@
 
     $('#cal1').on( 'change', function(event) {
       var dateString = $('#cal1').val();
-      deGauge.config.data.datasets[0].gaugeData.value = daysIntoYear(dateString);
-      deGauge.update({duration:0,lazy: true});
+//      deGauge.config.data.datasets[0].gaugeData.value = daysIntoYear(dateString);
+      deValue = daysIntoYear(dateString);
+      position = computePosition(deValue,deBudget);
+      de();
+      capc();
+      psvb();
+      afrvb();
+//      deGauge.update({duration:0,lazy: true});
     });
 
     // set initial date from file
