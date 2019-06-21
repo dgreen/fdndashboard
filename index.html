@@ -255,6 +255,7 @@
     function baseChartOptions() {
       var options = {        
         cutoutPercentage: 90,
+        defaultFontSize: 11,
         animate: false,
         tooltips: {
           enabled: false
@@ -281,7 +282,7 @@
       let barHigh = Math.round((position * plan) * 1.02);
       data.datasets[0].gaugeLimits = [0, barLow, barHigh, plan, gaugeMax];
       data.datasets[0].gaugeData.value = value;
-      data.datasets[0].limitVisibilty = [ true, false, false, true, true];
+      data.datasets[0].limitVisibilty = [ true, false, false, true, name == 'de' ? false : true];
       data.datasets[0].backgroundColor = [
               `darkorange`,
               `black`,
@@ -336,8 +337,18 @@
       return drawGauge('pter', data, options);
     }
 
+    // change height of all text box to be same as Admin &amp; Fund Raising vs Budget box
+    // just visual clean up
+    topRowHeadingHeight = $('#afrvb-title').innerHeight();
+    $('#de-title'   ).innerHeight(topRowHeadingHeight);
+    $('#capc-title' ).innerHeight(topRowHeadingHeight);
+    $('#psvb-title' ).innerHeight(topRowHeadingHeight);
+    $('#afrvb-title').innerHeight(topRowHeadingHeight);
+
+    // set initial date from file
+    $('#cal1').val(deDate);
+
     // draw the gauges
-    Chart.defaults.tsgauge.animation.animateRotate = false;  // Bug: does not impact display
     deGauge    = de();
     capcGauge  = capc();
     psvbGauge  = psvb();
@@ -376,30 +387,18 @@
       return theDay;
     }
 
-
-    // deGauge.config.data.datasets[0].gaugeData.value = daysIntoYear(deDate)
-
-
+    // refresh top row of gauges when date changes
     $('#cal1').on( 'change', function(event) {
       var dateString = $('#cal1').val();
-//      deGauge.config.data.datasets[0].gaugeData.value = daysIntoYear(dateString);
       deValue = daysIntoYear(dateString);
       position = computePosition(deValue,deBudget);
       de();
       capc();
       psvb();
       afrvb();
-//      deGauge.update({duration:0,lazy: true});
     });
 
-    // set initial date from file
-    $('#cal1').val(deDate);
-
-    // change height of Days Expended text box to be same as Admin &amp; Fund Raising vs Budget box
-    // just visual clean up
-    $('#de-title').innerHeight($('#afrvb-title').innerHeight());
     </script>
-
 
   </body>
 </html>
