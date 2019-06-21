@@ -278,18 +278,22 @@
     function drawCommonAngleGauge(name, plan, value) {
       var data = baseChartData();
       let gaugeMax = computeMax(plan);
-      let barLow  = Math.round((position * plan) * .98);
-      let barHigh = Math.round((position * plan) * 1.02);
-      data.datasets[0].gaugeLimits = [0, barLow, barHigh, plan, gaugeMax];
-      data.datasets[0].gaugeData.value = value;
-      data.datasets[0].limitVisibilty = [ true, false, false, true, name == 'de' ? false : true];
-      data.datasets[0].backgroundColor = [
-              `darkorange`,
-              `black`,
-              `darkorange`,
-              `darkblue`
-          ];
 
+      // Draw position in year unless year end
+
+      if (position < 1.0) {
+        let barLow  = Math.round( (position-.01) * plan);
+        let barHigh = Math.round((position+.01) * plan);
+        data.datasets[0].gaugeLimits = [0, barLow, barHigh, plan, gaugeMax];
+        data.datasets[0].limitVisibilty = [ true, false, false, true, name == 'de' ? false : true];
+        data.datasets[0].backgroundColor = [ 'darkorange', 'black', 'darkorange', 'darkblue' ];
+      } else {
+        data.datasets[0].gaugeLimits = [0, plan, gaugeMax];
+        data.datasets[0].limitVisibilty = [ true, true, name == 'de' ? false : true];
+        data.datasets[0].backgroundColor = [ 'darkorange', 'darkblue' ];
+      }
+
+      data.datasets[0].gaugeData.value = value;
       var options = baseChartOptions();
       var ctx = document.getElementById(name);
       gauge = new Chart(ctx, {
