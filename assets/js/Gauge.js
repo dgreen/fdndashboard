@@ -126,14 +126,14 @@
 	GaugeChartHelper.prototype.renderValueLabel = function() {
 		var label = this.data.value.toString();
 		var ctx = this.ctx;
-		ctx.font = "30px " + this.fontStyle;
-		var stringWidth = ctx.measureText(label).width;
-		var elementWidth = 0.75 * this.gaugeRadius * 2;
-		var widthRatio = elementWidth / stringWidth;
-		var newFontSize = Math.floor(20 * widthRatio);  // dgg was 30
-		var fontSizeToUse = Math.min(newFontSize, this.gaugeRadius);
+		ctx.font = "50px " + this.fontStyle;
+		// var stringWidth = ctx.measureText(label).width;
+		// var elementWidth = 0.75 * this.gaugeRadius * 2;
+		// var widthRatio = elementWidth / stringWidth;
+		// var newFontSize = Math.floor(20 * widthRatio);  // dgg was 30
+		// var fontSizeToUse = Math.min(newFontSize, this.gaugeRadius);
 		ctx.textAlign = "center";
-		ctx.font = fontSizeToUse + "px " + this.fontStyle;
+		// ctx.font = fontSizeToUse + "px " + this.fontStyle;
 		ctx.fillStyle = this.data.valueColor || this.fontColor;
 		ctx.fillText(label, this.gaugeCenterX, this.gaugeCenterY);
 	};
@@ -223,7 +223,6 @@
 			if (gaugeHelper.showMarkers) {
 				gaugeHelper.renderLimits();
 			}
-			console.log(gaugeHelper.animate)
 			if (gaugeHelper.animate) {
 				gaugeHelper.renderSmallValueArrow(gaugeHelper.minValue);
 			} else {
