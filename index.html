@@ -380,7 +380,8 @@
       $('#infoSave').click(function() {
         theGauge.config.data.datasets[0].gaugeData.value = parseFloat($('#infoValue').val()); 
         theGauge.update({duration:0,lazy: true});
-        $('#infoModal').modal('hide');     
+        $('#infoModal').modal('hide');  
+        reDrawTopRow();   
       });
     });
 
@@ -391,15 +392,26 @@
       return theDay;
     }
 
-    // refresh top row of gauges when date changes
-    $('#cal1').on( 'change', function(event) {
-      var dateString = $('#cal1').val();
-      deValue = daysIntoYear(dateString);
-      position = computePosition(deValue,deBudget);
+    // redraw top row
+    function reDrawTopRow() {
+      // copy present values into the values to reset to
+      capcValue = capcGauge.config.data.datasets[0].gaugeData.value;
+      psvbValue = psvbGauge.config.data.datasets[0].gaugeData.value;
+      afrvbValue = afrvbGauge.config.data.datasets[0].gaugeData.value;
       de();
       capc();
       psvb();
       afrvb();
+    }
+
+
+    // refresh top row of gauges when date changes
+    $('#cal1').on( 'change', function(event) {
+      var dateString = $('#cal1').val();
+      deValue = daysIntoYear(dateString);
+      deGauge.config.data.datasets[0].gaugeData.value = deValue;
+      position = computePosition(deValue,deBudget);
+      reDrawTopRow();
     });
 
     </script>
