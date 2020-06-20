@@ -9,11 +9,11 @@
     <meta name="author" content="David Green">
 
     <title>
-        IEEE Foundation Dashboard 
+        IEEE Foundation Dashboard
     </title>
 
     <link href="http://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic" rel="stylesheet">
-    
+
     <link href="assets/css/toolkit-light.css" rel="stylesheet">
     <link href="assets/css/application.css" rel="stylesheet">
 
@@ -47,9 +47,9 @@
 
       #notes {
         height: 180px;
-        font-family: Arial, Helvetica, sans-serif;  
+        font-family: Arial, Helvetica, sans-serif;
         font-size: 24px;
-        color: darkblue; 
+        color: darkblue;
       }
 
       .dashhead-title {
@@ -102,7 +102,7 @@
           </div>
 
           <div class="col-md-3 mb-5">
-            <h5 id='capc-title'><span class="icon icon-heart"> Cash and Pledge Contributions</span></h5>           
+            <h5 id='capc-title'><span class="icon icon-heart"> Cash and Pledge Contributions</span></h5>
             <div class="w-3">
               <canvas id='capc' class='dbPane' data-toggle='modal' data-target='#infoModal' data-whatever='capc'></canvas>
             </div>
@@ -196,12 +196,10 @@
     <script>
       // execute/clear BS loaders for docs
       $(function(){while(window.BS&&window.BS.loader&&window.BS.loader.length){(window.BS.loader.pop())()}})
-    </script>
 
-    <script>
-    // activities related to initialization after initData.js loads
-    function days_of_a_year(year) 
-    {   
+      // activities related to initialization after initData.js loads
+    function days_of_a_year(year)
+    {
       return isLeapYear(year) ? 366 : 365;
     }
 
@@ -217,8 +215,15 @@
       return value / toBudget;
     }
 
+    function daysIntoYear(dateString) {
+      dateObject     = new Date(dateString);
+      // note:  +1 at end of equation is due to using the start of each day so .ceil does not help
+      var theDay = Math.ceil((dateObject - new Date(dateObject.getFullYear(),0,1)) / 86400000) + 1;
+      return theDay;
+    }
+
     var deBudget                = days_of_a_year(new Date(deDate).getFullYear());
-    var deValue                 = 90; // will be overridden
+    var deValue                 = daysIntoYear(deDate);
 
     var position                = computePosition(deValue, deBudget);
 
@@ -228,10 +233,7 @@
     var niiMax                  = Math.round(niiBudget * (20./6.));    // 20% gain
     var niiMin                  = Math.round(-niiBudget * (10./6.));   // 10% loss
     var pterMax                 = 100;
-    </script>
 
-
-    <script>
     function baseChartData() {
       var data = {
         datasets: [{
@@ -253,7 +255,7 @@
     }
 
     function baseChartOptions() {
-      var options = {        
+      var options = {
         cutoutPercentage: 90,
         defaultFontSize: 11,
         animate: false,
@@ -325,7 +327,7 @@
       data.datasets[0].gaugeLimits = [niiMin, 0, niiBudget, niiMax];
       data.datasets[0].backgroundColor = ['red', '#FFFF66', 'green'];
       data.datasets[0].gaugeData.value = niiValue;
-  
+
       var options = baseChartOptions();
 
       return drawGauge('nii', data, options);
@@ -336,7 +338,7 @@
       data.datasets[0].gaugeLimits = [0, pterCharityNavigator, pterMinTarget, pterMax];
       data.datasets[0].backgroundColor = ['red', '#FFFF66', 'green'];
       data.datasets[0].gaugeData.value = pterValue;
-  
+
       var options = baseChartOptions();
       return drawGauge('pter', data, options);
     }
@@ -378,19 +380,12 @@
       $('#infoValue').val(theGauge.config.data.datasets[0].gaugeData.value.toString(10));
       $('#topicInfo').text($(titleInfoID).text());
       $('#infoSave').click(function() {
-        theGauge.config.data.datasets[0].gaugeData.value = parseFloat($('#infoValue').val()); 
+        theGauge.config.data.datasets[0].gaugeData.value = parseFloat($('#infoValue').val());
         theGauge.update({duration:0,lazy: true});
-        $('#infoModal').modal('hide');  
-        reDrawTopRow();   
+        $('#infoModal').modal('hide');
+        reDrawTopRow();
       });
     });
-
-    function daysIntoYear(dateString) {
-      dateObject     = new Date(dateString);
-      // note:  +1 at end of equation is due to using the start of each day so .ceil does not help
-      var theDay = Math.ceil((dateObject - new Date(dateObject.getFullYear(),0,1)) / 86400000) + 1;
-      return theDay;
-    }
 
     // redraw top row
     function reDrawTopRow() {
@@ -398,10 +393,14 @@
       capcValue = capcGauge.config.data.datasets[0].gaugeData.value;
       psvbValue = psvbGauge.config.data.datasets[0].gaugeData.value;
       afrvbValue = afrvbGauge.config.data.datasets[0].gaugeData.value;
-      de();
-      capc();
-      psvb();
-      afrvb();
+      deGauge.destroy();
+      deGauge = de();
+      capcGauge.destroy()
+      capcGauge = capc();
+      psvbGauge.destroy();
+      psvbGauge = psvb();
+      afrvbGauge.destroy();
+      afrvbGauge = afrvb();
     }
 
 
