@@ -8,12 +8,15 @@ var psvbValue      = 2000
 var afrvbBudget    = 4000
 var afrvbValue     = 700
 
-var deDate         = '3/31/2019'
+var deDate         = '3/31/2020'
 
 var niiBudget      = 1500
 var niiValue       = 750
 var niiPercentYTD  = 3
 var niiPercentGoal = 6
 
-var pterValue      = 84
+var year           = 2020
+var pterValue      = 70
+var pterOlder      = 82
+var pterOldest     = 84
 // -------------- End editing

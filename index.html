@@ -12,7 +12,7 @@
         IEEE Foundation Dashboard
     </title>
 
-    <link href="http://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic" rel="stylesheet">
+    <link href="http://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic" crossorigin="anonymous" rel="stylesheet">
 
     <link href="assets/css/toolkit-light.css" rel="stylesheet">
     <link href="assets/css/application.css" rel="stylesheet">
@@ -58,7 +58,7 @@
         font-weight: bold;
       }
 
-      .niinotes {
+      .niinotes, .pternotes {
         font-family: Arial, Helvetica, sans-serif;
         color: darkblue;
         /** position: relative; */
@@ -147,6 +147,10 @@
             <div class="w-3">
               <canvas id='pter' class='dbPane' data-toggle='modal' data-target='#infoModal' data-whatever='pter'></canvas>
             </div>
+            <p class="pternotes">
+              Three year average from 990<br>
+              <span id="per3YearData">2018: 84, 2019: 82, 2020YTD: 70</span>
+            </p>
           </div>
           <div class="col-md-6 mb-5">
             <div>
@@ -174,7 +178,7 @@
           </button>
         </div>
         <div class="modal-body">
-          <p>Value: <input type='text' id='infoValue'></p>
+          <p><label for="infoValue">Value: </label><input type='text' id='infoValue'></p>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -215,6 +219,14 @@
       return value / toBudget;
     }
 
+    function checkConsistency(aYear, aDeDate, source) {
+      if (new Date(aDeDate).getFullYear() != aYear) alert("Warning: Calendar year does not match year in " + source);
+    }
+
+    function computePERavg() {
+      return Math.round((pterValue + pterOlder + pterOldest) / 3);
+    }
+
     function daysIntoYear(dateString) {
       dateObject     = new Date(dateString);
       // note:  +1 at end of equation is due to using the start of each day so .ceil does not help
@@ -227,8 +239,8 @@
 
     var position                = computePosition(deValue, deBudget);
 
-    var pterCharityNavigator    = 75;
-    var pterMinTarget           = 78;
+    var pterCharityNavigator    = 70;
+    var pterMinTarget           = 73;
 
     var niiMax                  = Math.round(niiBudget * (20./6.));    // 20% gain
     var niiMin                  = Math.round(-niiBudget * (10./6.));   // 10% loss
@@ -337,7 +349,7 @@
       var data = baseChartData();
       data.datasets[0].gaugeLimits = [0, pterCharityNavigator, pterMinTarget, pterMax];
       data.datasets[0].backgroundColor = ['red', '#FFFF66', 'green'];
-      data.datasets[0].gaugeData.value = pterValue;
+      data.datasets[0].gaugeData.value = computePERavg();
 
       var options = baseChartOptions();
       return drawGauge('pter', data, options);
@@ -371,6 +383,7 @@
     $('#niiPctYTD').text(niiPercentYTD);
     $('#niiPctGoal').text(niiPercentGoal);
     canvasToGauge['pter']  = pterGauge;
+    $('#per3YearData').text(`xxx${year-2}: ${pterOldest}, ${year-1}: ${pterOlder}, ${year}YTD: ${pterValue}`);
 
     $('#infoModal').on('show.bs.modal', function (event) {
       var infoCanvas = $(event.relatedTarget);        // Chart that triggered the modal
@@ -407,11 +420,14 @@
     // refresh top row of gauges when date changes
     $('#cal1').on( 'change', function(event) {
       var dateString = $('#cal1').val();
+      checkConsistency(year, dateString, 'date selection');
       deValue = daysIntoYear(dateString);
       deGauge.config.data.datasets[0].gaugeData.value = deValue;
       position = computePosition(deValue,deBudget);
       reDrawTopRow();
     });
+
+    checkConsistency(year, deDate, 'initData.js file');
 
     </script>
 
