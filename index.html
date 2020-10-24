@@ -383,7 +383,7 @@
     $('#niiPctYTD').text(niiPercentYTD);
     $('#niiPctGoal').text(niiPercentGoal);
     canvasToGauge['pter']  = pterGauge;
-    $('#per3YearData').text(`xxx${year-2}: ${pterOldest}, ${year-1}: ${pterOlder}, ${year}YTD: ${pterValue}`);
+    $('#per3YearData').text(`${year-2}: ${pterOldest}, ${year-1}: ${pterOlder}, ${year}YTD: ${pterValue}`);
 
     $('#infoModal').on('show.bs.modal', function (event) {
       var infoCanvas = $(event.relatedTarget);        // Chart that triggered the modal
