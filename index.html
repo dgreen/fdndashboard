@@ -388,12 +388,20 @@
     $('#infoModal').on('show.bs.modal', function (event) {
       var infoCanvas = $(event.relatedTarget);        // Chart that triggered the modal
       var infoCanvasID = infoCanvas.data('whatever'); // Extract info from data-* attributes
+      var value;
       theGauge = canvasToGauge[infoCanvasID];
       titleInfoID = '#' + infoCanvasID + "-title";
       $('#infoValue').val(theGauge.config.data.datasets[0].gaugeData.value.toString(10));
       $('#topicInfo').text($(titleInfoID).text());
       $('#infoSave').click(function() {
-        theGauge.config.data.datasets[0].gaugeData.value = parseFloat($('#infoValue').val());
+        value = parseFloat($('#infoValue').val());
+
+        if (infoCanvasID === 'pter') {
+          pterValue = value;
+          $('#per3YearData').text(`xxx${year-2}: ${pterOldest}, ${year-1}: ${pterOlder}, ${year}YTD: ${pterValue}`);
+          value = computePERavg();
+        }
+        theGauge.config.data.datasets[0].gaugeData.value = value;
         theGauge.update({duration:0,lazy: true});
         $('#infoModal').modal('hide');
         reDrawTopRow();
